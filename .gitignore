@@ -1,0 +1,6 @@
+Dockerfile.tmp
+Dockerfile
+*.iso
+*.tmp
+.iso.*
+

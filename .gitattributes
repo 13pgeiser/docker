@@ -1,0 +1,7 @@
+*           text=auto
+*.*         text eol=lf
+*.sh        eol=lf
+Dockerfile  eol=lf
+makefile    eol=lf
+*.m4        eol=lf
+
