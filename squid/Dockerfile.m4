@@ -1,17 +1,18 @@
 # vim:set ft=dockerfile:
-# VERSION=3
+# VERSION=4
 include(`debian_base.m4')
 
 # Install squid and bind9
 RUN set -ex \
     && apt-get update \
+    && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends \
-	bind9 \
-	squid \
-	squidclient \
-	ca-certificates \
-        dumb-init \
-        curl \
+    bind9 \
+    squid \
+    squidclient \
+    ca-certificates \
+    dumb-init \
+    curl \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 

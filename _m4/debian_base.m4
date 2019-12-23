@@ -1,5 +1,5 @@
 # Debian base.
-FROM debian:9.9-slim
+FROM debian:10.2-slim
 MAINTAINER Pascal Geiser <pgeiser@pgeiser.com>
 
 RUN echo 'Acquire::http::Pipeline-Depth "0";\n\

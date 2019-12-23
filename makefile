@@ -7,6 +7,9 @@ M4 = m4
 
 # List of docker images & targets
 DOCKERFILES=\
+	apt_cacher_ng/Dockerfile \
+	buildbot_master/Dockerfile \
+	buildbot_worker/Dockerfile \
 	squid/Dockerfile \
 
 # Default rule for m4 -> build docker image!
