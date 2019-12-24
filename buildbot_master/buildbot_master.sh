@@ -1,6 +1,8 @@
 #!/bin/bash
-if [ ! -e master ]; then
-	bbtravis create-master master
+export LC_ALL=C
+if [ ! -e master/master.cfg ]; then
+  mkdir -p master
+  bbtravis create-master master
 	cat <<EOF >master/master.cfg
 import os
 from buildbot_travis import TravisConfigurator
@@ -88,16 +90,6 @@ projects:
     branches:
     - master
     name: mscgen
-    vcs_type: git+poller
--   repository: https://github.com/13pgeiser/vim.git
-    branches:
-    - master
-    name: vim
-    vcs_type: git+poller
--   repository: https://github.com/13pgeiser/debian_chromebook_XE303C12.git
-    branches:
-    - master
-    name: debian_chromebook_XE303C12
     vcs_type: git+poller
 stages: []
 workers:
