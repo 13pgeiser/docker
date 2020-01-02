@@ -1,16 +1,16 @@
-# Path to the common M4 files.
-M4_COMMON = `pwd`/_m4
-M4 = m4
-
-# Include local config if any
--include ../docker_config.mak
-
 # List of docker images & targets
 DOCKERFILES=\
 	apt_cacher_ng/Dockerfile \
 	buildbot_master/Dockerfile \
 	buildbot_worker/Dockerfile \
 	squid/Dockerfile \
+
+# Path to the common M4 files.
+M4_COMMON = `pwd`/_m4
+M4 = m4
+
+# Include local config if any
+-include ../docker_config.mak
 
 # Default rule for m4 -> build docker image!
 %: %.m4
