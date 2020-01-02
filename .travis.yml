@@ -7,7 +7,6 @@ services:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get dist-upgrade
   - sudo apt-get install make m4
   - make
 
