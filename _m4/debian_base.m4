@@ -2,6 +2,8 @@
 FROM debian:10.2-slim
 MAINTAINER Pascal Geiser <pgeiser@pgeiser.com>
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN echo 'Acquire::http::Pipeline-Depth "0";\n\
 Acquire::http::No-Cache=True;\n\
 Acquire::BrokenProxy=true;\n'\
