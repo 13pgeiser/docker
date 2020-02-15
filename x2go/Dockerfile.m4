@@ -68,6 +68,44 @@ RUN set -ex \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Install Dev tools
+RUN set -ex \
+    && apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get install -y --no-install-recommends \
+      curl \
+      git-gui \
+      vim-gtk3 \
+      fonts-powerline \
+      libssl-dev \
+      libffi-dev \
+      python3-dev \
+      python3-pip \
+      python3-venv \
+      python3-setuptools \
+      python3-wheel \
+      build-essential \
+      cmake \
+      ninja-build \
+      libclang-dev \
+      golang \
+      rustc \
+      cargo \
+      silversearcher-ag \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
+# Install Dev tools
+#RUN set -ex \
+#    && apt-get update \
+#    && apt-get dist-upgrade -y \
+#    && apt-get install -y --no-install-recommends \
+#      docker.io \
+#    && apt-get clean \
+#    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
 VOLUME ["/home", "/shared-data"]
 ADD run.sh /run.sh
 EXPOSE 22
