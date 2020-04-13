@@ -1,11 +1,11 @@
 # vim:set ft=dockerfile:
-# VERSION=1
+# VERSION=2
 include(`debian_base.m4')
 include(`buildbot_base.m4')
 
 # Install Buildbot master
 RUN set -ex \
-    && python3 -m pip install buildbot==2.5.1 buildbot_travis==0.6.4 buildbot_badges==2.5.1
+    && python3 -m pip install buildbot==2.7.0 buildbot_travis==0.6.4 buildbot_badges==2.7.0
 
 COPY buildbot_master.sh /
 

@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-# VERSION=1
+# VERSION=2
 include(`debian_base.m4')
 include(`buildbot_base.m4')
 
@@ -8,7 +8,7 @@ include(`docker.m4')
 
 # Install Buildbot worker
 RUN set -ex \
-    && python3 -m pip install buildbot-worker==2.5.1
+    && python3 -m pip install buildbot-worker==2.7.0
 
 COPY buildbot_worker.sh /
 
