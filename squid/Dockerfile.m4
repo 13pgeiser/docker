@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-# VERSION=5
+# VERSION=6
 include(`debian_base.m4')
 
 # Install squid and bind9
@@ -22,6 +22,6 @@ COPY start.sh /
 EXPOSE 3128
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["bash", "start.sh"]
-HEALTHCHECK --interval=1m --timeout=10s \
+HEALTHCHECK --interval=5m --timeout=10s \
   CMD squidclient -h 127.0.0.1 cache_object://127.0.0.1/counters || exit 1
 
