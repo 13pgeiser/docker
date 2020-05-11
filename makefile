@@ -4,7 +4,6 @@ DOCKERFILES=\
 	buildbot_master/Dockerfile \
 	buildbot_worker/Dockerfile \
 	squid/Dockerfile \
-	x2go/Dockerfile \
 
 # Path to the common M4 files.
 M4_COMMON = `pwd`/_m4
