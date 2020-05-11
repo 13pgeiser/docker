@@ -31,8 +31,9 @@ ENV TZ=Europe/Zurich
 
 RUN sed -i 's/# fr_CH.UTF-8 UTF-8/fr_CH.UTF-8 UTF-8/' /etc/locale.gen && \
     sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    sed -i 's/# en_IN UTF-8/en_IN UTF-8/' /etc/locale.gen && \
     ln -fs /etc/locale.alias /usr/share/locale/locale.alias && \
-    locale-gen && update-locale LANG=en_US.UTF-8
+    locale-gen && update-locale LANG=en_IN
 
 RUN mkdir -p /var/run/sshd \
   && mkdir -p /tmp/.X11-unix \
@@ -96,15 +97,6 @@ RUN set -ex \
       silversearcher-ag \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
-
-# Install Dev tools
-#RUN set -ex \
-#    && apt-get update \
-#    && apt-get dist-upgrade -y \
-#    && apt-get install -y --no-install-recommends \
-#      docker.io \
-#    && apt-get clean \
-#    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 VOLUME ["/home", "/shared-data"]
 ADD run.sh /run.sh
