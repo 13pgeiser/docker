@@ -36,5 +36,5 @@ mrproper: clean
 
 # Push to configure registry
 push:
-	for img in `docker image ls | cut -d ' ' -f 1 | grep $(REGISTRY)` ; do docker push $$img ; done
+	for img in `docker image ls --format "{{.Repository}}:{{.Tag}}" | grep -v 'latest' | grep $(REGISTRY)` ; do docker push $$img ; done
 
