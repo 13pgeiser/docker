@@ -5,9 +5,9 @@ options {
     listen-on-v6 { none; };
     filter-aaaa-on-v4 yes;
     forwarders {
+        192.168.188.1;
 	8.8.8.8;
 	8.8.4.4;
-        192.168.188.1;
     };
     recursion yes;  # enables resursive queries
     version none;

@@ -5,7 +5,7 @@ include(`buildbot_base.m4')
 
 # Install Buildbot master
 RUN set -ex \
-    && python3 -m pip install buildbot==2.7.0 buildbot_travis==0.6.4 buildbot_badges==2.7.0
+    && python3 -m pip install buildbot==3.0.2 buildbot_travis==0.6.4 buildbot_badges==3.0.2
 
 COPY buildbot_master.sh /
 

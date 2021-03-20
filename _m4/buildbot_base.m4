@@ -14,10 +14,13 @@ RUN set -ex \
       openssh-client \
       sudo \
       libcairo-gobject2 \
+      rustc \
+      cargo \
+      libssl-dev \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==20.3.0 service_identity==18.1.0
+    && python3 -m pip install twisted==21.2.0 service_identity==18.1.0
 
