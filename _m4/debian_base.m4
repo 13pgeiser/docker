@@ -1,5 +1,5 @@
 # Debian base.
-FROM debian:10.8-slim
+FROM debian:buster-slim
 MAINTAINER Pascal Geiser <pgeiser@pgeiser.com>
 
 ENV DEBIAN_FRONTEND=noninteractive

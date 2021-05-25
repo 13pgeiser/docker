@@ -22,5 +22,5 @@ RUN set -ex \
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==21.2.0 service_identity==18.1.0
+    && python3 -m pip install twisted==21.2.0 service_identity==21.1.0
 

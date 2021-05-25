@@ -1,55 +1,95 @@
 #!/bin/bash
 export LC_ALL=C
+pwd
+ls -al
 if [ ! -e master/master.cfg ]; then
   mkdir -p master
-  bbtravis create-master master
-	cat <<EOF >master/master.cfg
+  buildbot create-master master
+	cat <<'EOF' >master/master.cfg
 import os
-from buildbot_travis import TravisConfigurator
-from buildbot.plugins import schedulers
+import shutil
+import urllib.request
 
+from buildbot.plugins import *
+repositories = os.environ['BUILDBOT_REPOS'].split(';')
 c = BuildmasterConfig = {}
-TravisConfigurator(BuildmasterConfig, basedir).fromYaml('cfg.yml')
 c['buildbotURL'] = os.environ['BUILDBOT_MASTER_URL']
 c['buildbotNetUsageData'] = 'basic'
+c['builders'] = []
+c['schedulers'] = []
+workers = os.environ['BUILDBOT_WORKERS'].split(';')
+c['workers'] = [worker.Worker(worker_name, os.environ['BUILDBOT_WORKERS_PASS'], max_builds=1) for worker_name in workers]
+c['protocols'] = {"pb": { "port": 9989 }}
+c['www'] = {
+    'port': 8010,
+    'plugins': {},
+}
+codebases = {}
+weekly_projects = []
+
+def fetch_buildbot_config(repo_url):
+    cwd = os.getcwd()
+    config = ''
+    try:
+        folder = 'test'
+        shutil.rmtree(folder, ignore_errors=True)
+        os.makedirs(folder)
+        os.chdir(folder)
+        os.system('git init')
+        os.system('git remote add origin ' + repo_url)
+        os.system('git config core.sparseCheckout true')
+        with open('.git/info/sparse-checkout', 'w') as f:
+            f.write('.buildbot\n')
+        os.system('git pull --depth=1 origin master')
+        with open('.buildbot', 'r') as f:
+            config = f.read()
+        shutil.rmtree(folder, ignore_errors=True)
+    finally:
+        os.chdir(cwd)
+    return config
+
+for repo in repositories:
+    repo = repo.strip()
+    name = os.path.basename(repo)
+    print('%s -> %s' % (repo, name))
+    codebases[name] = { 'repository' : repo }
+    f = util.BuildFactory()
+    config = fetch_buildbot_config(repo)
+    f.addStep(steps.Git(repourl=repo, mode='full', method='clobber'))
+    for step in config.split('\n'):
+        step = step.strip()
+        if not step:
+            continue
+        elif step.startswith('#'):
+            continue
+        elif step.startswith('bash '):
+            f.addStep(steps.ShellCommand(command='bash ' + step[5:]))
+        else:
+            raise Exception('unsupported step: ' + step)
+    b = {
+        "name": name,
+        "workernames": workers,
+        "factory": f,
+    }
+    c['builders'].append(b)
+    weekly_projects.append(name)
+
+c['schedulers'].append(
+    schedulers.ForceScheduler(
+        name="force",
+        buttonName="pushMe!",
+        builderNames=weekly_projects))
+
+c['schedulers'].append(
+    schedulers.Nightly(name='weekly',
+                      codebases=codebases,
+                       branch='master',
+                       builderNames=weekly_projects,
+                       dayOfWeek=5, hour=0, minute=0))
 
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 pp.pprint(c)
-
-codebases = {}
-nightly_projects = []
-weekly_projects = []
-
-for project in c ['www']['plugins']['buildbot_travis']['cfg']['projects']:
-	print(project)
-	codebases[project['name']] = { 'repository' : project['repository'] }
-	if 'weekly' in project and project['weekly']:
-		weekly_projects.append(project['name'])
-	else:
-		nightly_projects.append(project['name'])
-
-print('Nightly!')
-pp.pprint(nightly_projects)
-print('\nWeekly!')
-pp.pprint(weekly_projects)
-
-
-c['schedulers'].append(
-    schedulers.Nightly(name='nightly',
-                       codebases=codebases,
-                       branch='master',
-                       builderNames=nightly_projects,
-                       hour=0, minute=0))
-
-c['schedulers'].append(
-    schedulers.Nightly(name='weekly',
-                       codebases=codebases,
-                       branch='master',
-                       builderNames=weekly_projects,
-                       dayOfWeek=5, hour=0, minute=0))
-for worker in c['workers']:
-	worker.max_builds = 1
 
 c['www']['plugins']['badges'] = {
     "left_text": "Build Status",  # text on the left part of the image
@@ -69,36 +109,33 @@ c['www']['plugins']['badges'] = {
         "warnings": "#dfb317"    # yellow
     }
 }
-
-
-EOF
-	cat <<EOF >master/cfg.yml
-env: {}
-not_important_files: []
-projects:
--   repository: https://github.com/13pgeiser/aafig.git
-    branches:
-    - master
-    name: aafig
-    vcs_type: git+poller
--   repository: https://github.com/13pgeiser/hieroglyph.git
-    branches:
-    - master
-    name: hieroglyph
-    vcs_type: git+poller
--   repository: https://github.com/13pgeiser/mscgen.git
-    branches:
-    - master
-    name: mscgen
-    vcs_type: git+poller
-stages: []
-workers:
--   name: buildbot_worker
-    type: Worker
-    password: pass
-
+c['www']['plugins']['waterfall_view'] = True
+c['www']['plugins']['console_view'] = True
+c['www']['plugins']['grid_view'] = True
 EOF
 fi
+cat <<EOF >buildbot.tac
+import os
+import sys
+
+from twisted.application import service
+from twisted.python.log import FileLogObserver
+from twisted.python.log import ILogObserver
+
+from buildbot.master import BuildMaster
+
+basedir = os.environ.get("BUILDBOT_BASEDIR",
+    os.path.abspath(os.path.dirname(__file__)))
+configfile = 'master.cfg'
+
+# note: this line is matched against to check that this is a buildmaster
+# directory; do not edit it.
+application = service.Application('buildmaster')
+application.setComponent(ILogObserver, FileLogObserver(sys.stdout).emit)
+
+m = BuildMaster(basedir, configfile, umask=None)
+m.setServiceParent(application)
+EOF
+#buildbot start --nodaemon master
 buildbot start master
 tail -f master/*.log
-

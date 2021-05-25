@@ -1,3 +1,2 @@
 #!/bin/bash
-docker run -it --rm --name buildbot_worker -v /var/run/docker.sock:/var/run/docker.sock --network main_network buildbot_worker
-
+docker run --privileged --rm -p 9989:9989 -e BUILDBOT_MASTER="localhost" -e BUILDBOT_WORKER_NAME="localhost" -e BUILDBOT_WORKER_PASS="buildbot_pass" --network=host -it buildbot_worker
