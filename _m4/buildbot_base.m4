@@ -8,6 +8,7 @@ RUN set -ex \
       python3-pip \
       python3-setuptools \
       python3-virtualenv \
+      python3-wheel \
       python3-dev \
       build-essential \
       git \

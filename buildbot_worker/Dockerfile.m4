@@ -8,7 +8,7 @@ include(`docker.m4')
 
 # Install Buildbot worker
 RUN set -ex \
-    && python3 -m pip install buildbot-worker==3.1.1
+    && python3 -m pip install buildbot-worker==3.2.0
 
 COPY buildbot_worker.sh /
 RUN set -ex \

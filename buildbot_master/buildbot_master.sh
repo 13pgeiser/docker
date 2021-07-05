@@ -8,14 +8,23 @@ if [ ! -e master/master.cfg ]; then
 	cat <<'EOF' >master/master.cfg
 import os
 import shutil
+import sys
 import urllib.request
 
 from buildbot.plugins import *
-repositories = os.environ['BUILDBOT_REPOS'].split(';')
+repositories = os.environ['BUILDBOT_REPOS']
+sys.stderr.write(repositories)
+if repositories.find(';') == -1:
+    repositories = repositories.split()
+else:
+    repositories = repositories.split(';')
 c = BuildmasterConfig = {}
+c['multiMaster'] = False
 c['buildbotURL'] = os.environ['BUILDBOT_MASTER_URL']
+c['logCompressionMethod'] = 'lz4'
 c['buildbotNetUsageData'] = 'basic'
 c['builders'] = []
+c['change_source'] = []
 c['schedulers'] = []
 workers = os.environ['BUILDBOT_WORKERS'].split(';')
 c['workers'] = [worker.Worker(worker_name, os.environ['BUILDBOT_WORKERS_PASS'], max_builds=1) for worker_name in workers]
@@ -44,6 +53,8 @@ def fetch_buildbot_config(repo_url):
         with open('.buildbot', 'r') as f:
             config = f.read()
         shutil.rmtree(folder, ignore_errors=True)
+    except Exception as e:
+        raise Exception('%s -> %s' % (repo_url, str(e)))
     finally:
         os.chdir(cwd)
     return config
@@ -52,10 +63,10 @@ for repo in repositories:
     repo = repo.strip()
     name = os.path.basename(repo)
     print('%s -> %s' % (repo, name))
-    codebases[name] = { 'repository' : repo }
     f = util.BuildFactory()
     config = fetch_buildbot_config(repo)
-    f.addStep(steps.Git(repourl=repo, mode='full', method='clobber'))
+    f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber'))
+    f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes'))
     for step in config.split('\n'):
         step = step.strip()
         if not step:
@@ -63,7 +74,7 @@ for repo in repositories:
         elif step.startswith('#'):
             continue
         elif step.startswith('bash '):
-            f.addStep(steps.ShellCommand(command='bash ' + step[5:]))
+            f.addStep(steps.ShellCommand(command=step[5:]))
         else:
             raise Exception('unsupported step: ' + step)
     b = {
@@ -74,6 +85,21 @@ for repo in repositories:
     c['builders'].append(b)
     weekly_projects.append(name)
 
+for repo in repositories:
+    repo = repo.strip()
+    name = os.path.basename(repo)
+    c['change_source'].append(changes.GitPoller(
+        repourl=repo,
+        branches=['master'],
+        pollRandomDelayMin=5*60,
+        pollRandomDelayMax=15*60))
+    c['schedulers'].append(
+        schedulers.AnyBranchScheduler(
+            name=name,
+            change_filter=util.ChangeFilter(repository=repo),
+            treeStableTimer=2*60,
+            builderNames=[name]))
+
 c['schedulers'].append(
     schedulers.ForceScheduler(
         name="force",
@@ -82,7 +108,6 @@ c['schedulers'].append(
 
 c['schedulers'].append(
     schedulers.Nightly(name='weekly',
-                      codebases=codebases,
                        branch='master',
                        builderNames=weekly_projects,
                        dayOfWeek=5, hour=0, minute=0))
@@ -114,6 +139,7 @@ c['www']['plugins']['console_view'] = True
 c['www']['plugins']['grid_view'] = True
 EOF
 fi
+cat master/master.cfg
 cat <<EOF >buildbot.tac
 import os
 import sys
