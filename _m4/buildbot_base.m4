@@ -18,10 +18,11 @@ RUN set -ex \
       rustc \
       cargo \
       libssl-dev \
+      supervisor \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==21.2.0 service_identity==21.1.0
+    && python3 -m pip install twisted==21.7.0 service_identity==21.1.0
 

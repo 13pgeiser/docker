@@ -8,7 +8,7 @@ include(`docker.m4')
 
 # Install Buildbot worker
 RUN set -ex \
-    && python3 -m pip install buildbot-worker==3.2.0
+    && python3 -m pip install buildbot-worker==3.3.0
 
 COPY buildbot_worker.sh /
 RUN set -ex \
@@ -20,7 +20,9 @@ ENV BUILDBOT_MASTER=localhost
 ENV BUILDBOT_WORKER_NAME=buildbot_worker
 ENV BUILDBOT_WORKER_PASS=pass
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["bash", "/buildbot_worker.sh"]
-
-
+#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+#CMD ["bash", "/buildbot_worker.sh"]
+ADD services.conf services.conf
+ADD buildbot_worker.sh buildbot_worker.sh
+RUN chmod +x /var/lib/buildbot/buildbot_worker.sh
+CMD ["supervisord","-c","/var/lib/buildbot/services.conf"]

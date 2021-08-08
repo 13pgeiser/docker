@@ -7,12 +7,12 @@ include(`buildbot_base.m4')
 RUN set -ex \
     && python3 -m pip install \
         lz4==3.1.3 \
-        buildbot==3.2.0 \
-        buildbot-www==3.2.0 \
-        buildbot_badges==3.2.0 \
-        buildbot-waterfall-view==3.2.0 \
-        buildbot-console-view==3.2.0 \
-        buildbot-grid-view==3.2.0
+        buildbot==3.3.0 \
+        buildbot-www==3.3.0 \
+        buildbot_badges==3.3.0 \
+        buildbot-waterfall-view==3.3.0 \
+        buildbot-console-view==3.3.0 \
+        buildbot-grid-view==3.3.0
 
 COPY buildbot_master.sh /
 

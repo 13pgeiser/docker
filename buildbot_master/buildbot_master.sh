@@ -91,8 +91,8 @@ for repo in repositories:
     c['change_source'].append(changes.GitPoller(
         repourl=repo,
         branches=['master'],
-        pollRandomDelayMin=5*60,
-        pollRandomDelayMax=15*60))
+        pollRandomDelayMin=1,
+        pollRandomDelayMax=5*60))
     c['schedulers'].append(
         schedulers.AnyBranchScheduler(
             name=name,
