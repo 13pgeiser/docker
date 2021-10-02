@@ -5,6 +5,9 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends \
       dumb-init \
       curl \
+      dbus \
+      dbus-user-session \
+      fuse-overlayfs \
       python3-pip \
       python3-setuptools \
       python3-virtualenv \

@@ -1,5 +1,5 @@
 # Debian base.
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 MAINTAINER Pascal Geiser <pgeiser@pgeiser.com>
 
 ENV DEBIAN_FRONTEND=noninteractive

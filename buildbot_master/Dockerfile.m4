@@ -14,19 +14,23 @@ RUN set -ex \
         buildbot-console-view==3.3.0 \
         buildbot-grid-view==3.3.0
 
-COPY buildbot_master.sh /
-
+# Install Python3, Git and ssh, ...
 RUN set -ex \
-    && chmod +x /buildbot_master.sh
+    && apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get install -y --no-install-recommends \
+      privoxy \
+      net-tools \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
+add privoxy.sh /privoxy.sh
 WORKDIR /var/lib/buildbot
-
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["bash", "/buildbot_master.sh"]
+ADD services.conf services.conf
+ADD buildbot_master.sh buildbot_master.sh
 HEALTHCHECK CMD curl --fail http://localhost:8010/api/v2 || exit 1
 ENV BUILDBOT_MASTER_URL="http://127.0.0.1:8010/"
 ENV BUILDBOT_WORKER_NAME=buildbot_worker
 ENV BUILDBOT_WORKER_PASS=pass
 ENV LC_ALL=C
-
-
+CMD ["supervisord","-c","/var/lib/buildbot/services.conf"]

@@ -14,15 +14,18 @@ COPY buildbot_worker.sh /
 RUN set -ex \
     && chmod +x /buildbot_worker.sh
 
+ADD daemon.json /etc/docker/daemon.json
 WORKDIR /var/lib/buildbot
+ADD services.conf services.conf
+ADD buildbot_worker.sh buildbot_worker.sh
 
-ENV BUILDBOT_MASTER=localhost
+ENV BUILDBOT_MASTER=buildbot_master
 ENV BUILDBOT_WORKER_NAME=buildbot_worker
 ENV BUILDBOT_WORKER_PASS=pass
 
-#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-#CMD ["bash", "/buildbot_worker.sh"]
-ADD services.conf services.conf
-ADD buildbot_worker.sh buildbot_worker.sh
-RUN chmod +x /var/lib/buildbot/buildbot_worker.sh
+ENV HTTP_PROXY="http://buildbot_master:8118/"
+ENV HTTPS_PROXY="http://buildbot_master:8118/"
+ENV http_proxy="http://buildbot_master:8118/"
+ENV https_proxy="http://buildbot_master:8118/"
+
 CMD ["supervisord","-c","/var/lib/buildbot/services.conf"]

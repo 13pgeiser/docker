@@ -69,7 +69,7 @@ YT90qFF93M3v01BbxP+EIY2/9tiIPbrd\n\
 -----END PGP PUBLIC KEY BLOCK-----\n\' >/tmp/docker.pub \
     && apt-key add /tmp/docker.pub \
     && rm -f /tmp/docker.pub \
-    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" \
+    && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" \
     && apt-get update \
     && apt-get install -y --no-install-recommends docker-ce \
     && apt-get clean \
