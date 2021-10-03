@@ -22,6 +22,8 @@ RUN set -ex \
       cargo \
       libssl-dev \
       supervisor \
+      privoxy \
+      net-tools \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 

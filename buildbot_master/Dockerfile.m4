@@ -14,16 +14,6 @@ RUN set -ex \
         buildbot-console-view==3.3.0 \
         buildbot-grid-view==3.3.0
 
-# Install Python3, Git and ssh, ...
-RUN set -ex \
-    && apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends \
-      privoxy \
-      net-tools \
-    && apt-get clean \
-    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
-
 add privoxy.sh /privoxy.sh
 WORKDIR /var/lib/buildbot
 ADD services.conf services.conf
