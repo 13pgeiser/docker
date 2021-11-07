@@ -22,6 +22,9 @@ c = BuildmasterConfig = {}
 c['multiMaster'] = False
 c['buildbotURL'] = os.environ['BUILDBOT_MASTER_URL']
 c['logCompressionMethod'] = 'lz4'
+c['logMaxSize'] = 1024*1024 # 1M
+c['logMaxTailSize'] = 32768
+c['logEncoding'] = 'utf-8'
 c['buildbotNetUsageData'] = 'basic'
 c['builders'] = []
 c['change_source'] = []
@@ -64,6 +67,7 @@ for repo in repositories:
     name = os.path.basename(repo)
     print('%s -> %s' % (repo, name))
     f = util.BuildFactory()
+    f.useProgress = True
     config = fetch_buildbot_config(repo)
     f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber'))
     f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes'))
