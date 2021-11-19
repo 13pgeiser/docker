@@ -78,7 +78,7 @@ for repo in repositories:
         elif step.startswith('#'):
             continue
         elif step.startswith('bash '):
-            f.addStep(steps.ShellCommand(command=step[5:]))
+            f.addStep(steps.ShellCommand(command=step[5:], timeout=3600))
         else:
             raise Exception('unsupported step: ' + step)
     b = {
