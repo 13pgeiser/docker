@@ -1,20 +1,39 @@
 # vim:set ft=dockerfile:
 # VERSION=2
 include(`debian_base.m4')
-include(`buildbot_base.m4')
+
+# Install Python3, Git and ssh, ...
+RUN set -ex \
+    && apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get install -y --no-install-recommends \
+      dumb-init \
+      python3-pip \
+      python3-setuptools \
+      python3-virtualenv \
+      python3-wheel \
+      python3-dev \
+      libcairo2 \
+      git \
+      supervisor \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
+# Install Twisted
+RUN set -ex \
+    && python3 -m pip install twisted==21.7.0 service_identity==21.1.0
 
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
         lz4==3.1.3 \
-        buildbot==3.3.0 \
-        buildbot-www==3.3.0 \
-        buildbot_badges==3.3.0 \
-        buildbot-waterfall-view==3.3.0 \
-        buildbot-console-view==3.3.0 \
-        buildbot-grid-view==3.3.0
+        buildbot==3.4.0 \
+        buildbot-www==3.4.0 \
+        buildbot_badges==3.4.0 \
+        buildbot-waterfall-view==3.4.0 \
+        buildbot-console-view==3.4.0 \
+        buildbot-grid-view==3.4.0
 
-add privoxy.sh /privoxy.sh
 WORKDIR /var/lib/buildbot
 ADD services.conf services.conf
 ADD buildbot_master.sh buildbot_master.sh
