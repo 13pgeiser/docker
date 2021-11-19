@@ -1,5 +1,0 @@
-{
-  "storage-driver": "fuse-overlayfs",
-  "insecure-registries": [],
-  "registry-mirrors": []
-}

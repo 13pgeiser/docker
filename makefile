@@ -2,7 +2,6 @@
 DOCKERFILES=\
 	apt_cacher_ng/Dockerfile \
 	buildbot_master/Dockerfile \
-	buildbot_worker/Dockerfile \
 	squid/Dockerfile \
 
 # Path to the common M4 files.
