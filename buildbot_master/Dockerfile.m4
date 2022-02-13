@@ -21,18 +21,18 @@ RUN set -ex \
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==21.7.0 service_identity==21.1.0
+    && python3 -m pip install twisted==22.1.0 service_identity==21.1.0
 
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
-        lz4==3.1.3 \
-        buildbot==3.4.0 \
-        buildbot-www==3.4.0 \
-        buildbot_badges==3.4.0 \
-        buildbot-waterfall-view==3.4.0 \
-        buildbot-console-view==3.4.0 \
-        buildbot-grid-view==3.4.0
+        lz4==3.1.10 \
+        buildbot==3.4.1 \
+        buildbot-www==3.4.1 \
+        buildbot_badges==3.4.1 \
+        buildbot-waterfall-view==3.4.1 \
+        buildbot-console-view==3.4.1 \
+        buildbot-grid-view==3.4.1
 
 WORKDIR /var/lib/buildbot
 ADD services.conf services.conf
