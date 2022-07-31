@@ -2,6 +2,7 @@
 export LC_ALL=C
 pwd
 ls -al
+mkdir -p public_html/
 if [ ! -e master/master.cfg ]; then
   mkdir -p master
   buildbot create-master master
@@ -18,9 +19,10 @@ if repositories.find(';') == -1:
     repositories = repositories.split()
 else:
     repositories = repositories.split(';')
+url = os.environ['BUILDBOT_MASTER_URL']
 c = BuildmasterConfig = {}
 c['multiMaster'] = False
-c['buildbotURL'] = os.environ['BUILDBOT_MASTER_URL']
+c['buildbotURL'] = url
 c['logCompressionMethod'] = 'lz4'
 c['logMaxSize'] = 1024*1024 # 1M
 c['logMaxTailSize'] = 32768
@@ -79,6 +81,8 @@ for repo in repositories:
             continue
         elif step.startswith('bash '):
             f.addStep(steps.ShellCommand(command=step[5:], timeout=3600))
+        elif step.startswith('directory_upload '):
+            f.addStep(steps.DirectoryUpload(workersrc=step[17:],, masterdest="/var/lib/buildbot/public_html/" + name, url=url[:url.rfind(':')] + '/' + name, timeout=3600))
         else:
             raise Exception('unsupported step: ' + step)
     b = {
