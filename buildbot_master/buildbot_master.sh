@@ -2,9 +2,9 @@
 export LC_ALL=C
 pwd
 ls -al
-mkdir -p public_html/
+mkdir -p master
+mkdir -p master/public_html/
 if [ ! -e master/master.cfg ]; then
-  mkdir -p master
   buildbot create-master master
 	cat <<'EOF' >master/master.cfg
 import os
@@ -82,7 +82,8 @@ for repo in repositories:
         elif step.startswith('bash '):
             f.addStep(steps.ShellCommand(command=step[5:], timeout=3600))
         elif step.startswith('directory_upload '):
-            f.addStep(steps.DirectoryUpload(workersrc=step[17:],, masterdest="/var/lib/buildbot/public_html/" + name, url=url[:url.rfind(':')] + '/' + name, timeout=3600))
+            folder = os.path.splitext(name)[0]
+            f.addStep(steps.DirectoryUpload(workersrc=step[17:], masterdest="/var/lib/buildbot/master/public_html/releases/" + folder, url=url[:url.rfind(':')] + '/releases/' + folder))
         else:
             raise Exception('unsupported step: ' + step)
     b = {
