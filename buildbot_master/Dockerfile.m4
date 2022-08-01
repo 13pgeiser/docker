@@ -15,6 +15,7 @@ RUN set -ex \
       python3-dev \
       libcairo2 \
       git \
+      nginx \
       supervisor \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
@@ -37,7 +38,8 @@ RUN set -ex \
 WORKDIR /var/lib/buildbot
 ADD services.conf services.conf
 ADD buildbot_master.sh buildbot_master.sh
-HEALTHCHECK CMD curl --fail http://localhost:8010/api/v2 || exit 1
+ADD buildbot-site /etc/nginx/sites-available/default
+# HEALTHCHECK CMD curl --fail http://localhost:8010/api/v2 || exit 1
 ENV BUILDBOT_MASTER_URL="http://127.0.0.1:8010/"
 ENV BUILDBOT_WORKER_NAME=buildbot_worker
 ENV BUILDBOT_WORKER_PASS=pass
