@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-# VERSION=6
+# VERSION=7
 include(`debian_base.m4')
 
 # Install squid and bind9
