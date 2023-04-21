@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-# VERSION=2
+# VERSION=3
 include(`debian_base.m4')
 
 # Install Python3, Git and ssh, ...
@@ -22,18 +22,18 @@ RUN set -ex \
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==22.4.0 service_identity==21.1.0
+    && python3 -m pip install twisted==22.10.0 service_identity==21.1.0
 
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
-        lz4==4.0.2 \
-        buildbot==3.5.0 \
-        buildbot-www==3.5.0 \
-        buildbot_badges==3.5.0 \
-        buildbot-waterfall-view==3.5.0 \
-        buildbot-console-view==3.5.0 \
-        buildbot-grid-view==3.5.0
+        lz4==4.3.2 \
+        buildbot==3.8.0 \
+        buildbot-www==3.8.0 \
+        buildbot_badges==3.8.0 \
+        buildbot-waterfall-view==3.8.0 \
+        buildbot-console-view==3.8.0 \
+        buildbot-grid-view==3.8.0
 
 WORKDIR /var/lib/buildbot
 ADD services.conf services.conf
