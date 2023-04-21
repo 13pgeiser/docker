@@ -75,7 +75,6 @@ for repo in repositories:
     config = fetch_buildbot_config(repo)
     f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber',submodules=True))
     f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes'))
-    f.addStep(steps.ShellCommand(command='git submodule update --init --recursive'))
     for step in config.split('\n'):
         step = step.strip()
         if not step:
