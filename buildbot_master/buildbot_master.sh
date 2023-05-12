@@ -82,7 +82,7 @@ for repo in repositories:
         elif step.startswith('#'):
             continue
         elif step.startswith('bash '):
-            f.addStep(steps.ShellCommand(command=step[5:], timeout=3600))
+            f.addStep(steps.ShellCommand(command=['bash', '-c'] + step[5:], timeout=3600))
         elif step.startswith('directory_upload '):
             folder = os.path.splitext(name)[0]
             f.addStep(steps.DirectoryUpload(workersrc=step[17:], masterdest="/var/lib/buildbot/master/public_html/releases/" + folder, url=url[:url.rfind(':')] + '/releases/' + folder))
