@@ -8,7 +8,8 @@ chmod 777 master/public_html/
 chmod 777 master/public_html/releases/
 if [ ! -e master/master.cfg ]; then
   buildbot create-master master
-	cat <<'EOF' >master/master.cfg
+fi
+cat <<'EOF' >master/master.cfg
 import os
 import shutil
 import sys
@@ -82,7 +83,7 @@ for repo in repositories:
         elif step.startswith('#'):
             continue
         elif step.startswith('bash '):
-            f.addStep(steps.ShellCommand(command=['bash', '-c'] + step[5:], timeout=3600))
+            f.addStep(steps.ShellCommand(command=['bash', '-c', step[5:]], timeout=3600))
         elif step.startswith('directory_upload '):
             folder = os.path.splitext(name)[0]
             f.addStep(steps.DirectoryUpload(workersrc=step[17:], masterdest="/var/lib/buildbot/master/public_html/releases/" + folder, url=url[:url.rfind(':')] + '/releases/' + folder))
@@ -149,7 +150,6 @@ c['www']['plugins']['waterfall_view'] = True
 c['www']['plugins']['console_view'] = True
 c['www']['plugins']['grid_view'] = True
 EOF
-fi
 cat master/master.cfg
 cat <<EOF >buildbot.tac
 import os
