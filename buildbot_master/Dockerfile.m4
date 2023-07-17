@@ -17,6 +17,8 @@ RUN set -ex \
       git \
       nginx \
       supervisor \
+      nano \
+      vim \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
