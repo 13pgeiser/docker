@@ -1,5 +1,5 @@
 # Debian base.
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 MAINTAINER Pascal Geiser <pgeiser@pgeiser.com>
 
 ENV DEBIAN_FRONTEND=noninteractive
