@@ -32,10 +32,10 @@ RUN set -x && \
     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     /opt/conda/bin/conda clean -afy
 
-RUN /opt/conda/bin/conda install mamba -n base -c conda-forge
+RUN /opt/conda/bin/conda install -y mamba -n base -c conda-forge
 
-RUN /opt/conda/bin/mamba install -c conda-forge xeus-cling
-RUN /opt/conda/bin/mamba install -c conda-forge jupyterlab
+RUN /opt/conda/bin/mamba install -y -c conda-forge xeus-cling
+RUN /opt/conda/bin/mamba install -y -c conda-forge jupyterlab
 
 RUN apt-get update -q && \
     apt-get install -q -y --no-install-recommends \
