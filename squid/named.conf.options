@@ -3,7 +3,6 @@ options {
     dnssec-validation auto;
     auth-nxdomain no;    # conform to RFC1035
     listen-on-v6 { none; };
-    filter-aaaa-on-v4 yes;
     forwarders {
         192.168.188.1;
 	8.8.8.8;
