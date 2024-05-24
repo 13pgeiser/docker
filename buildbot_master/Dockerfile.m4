@@ -24,18 +24,18 @@ RUN set -ex \
 
 # Install Twisted
 RUN set -ex \
-    && python3 -m pip install twisted==23.10.0 service_identity==23.1.0  --break-system-packages
+    && python3 -m pip install twisted==24.3.0  service_identity==24.1.0  --break-system-packages
 
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
         lz4==4.3.2 \
-        buildbot==3.10.0 \
-        buildbot-www==3.10.0 \
-        buildbot_badges==3.10.0 \
-        buildbot-waterfall-view==3.10.0 \
-        buildbot-console-view==3.10.0 \
-        buildbot-grid-view==3.10.0 \
+        buildbot==3.11.3 \
+        buildbot-www==3.11.3 \
+        buildbot_badges==3.11.3 \
+        buildbot-waterfall-view==3.11.3 \
+        buildbot-console-view==3.11.3 \
+        buildbot-grid-view==3.11.3 \
         --break-system-packages
 
 WORKDIR /var/lib/buildbot

@@ -2,8 +2,8 @@
 DOCKERFILES=\
 	apt_cacher_ng/Dockerfile \
 	buildbot_master/Dockerfile \
-	jupyter/Dockerfile \
 	squid/Dockerfile \
+#	jupyter/Dockerfile \
 
 # Path to the common M4 files.
 M4_COMMON = `pwd`/_m4
