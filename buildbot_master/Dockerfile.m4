@@ -29,13 +29,13 @@ RUN set -ex \
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
-        lz4==4.3.2 \
-        buildbot==3.11.3 \
-        buildbot-www==3.11.3 \
-        buildbot_badges==3.11.3 \
-        buildbot-waterfall-view==3.11.3 \
-        buildbot-console-view==3.11.3 \
-        buildbot-grid-view==3.11.3 \
+        lz4==4.3.3 \
+        buildbot==4.0.1 \
+        buildbot-www==4.0.1 \
+        buildbot_badges==4.0.1 \
+        buildbot-waterfall-view==4.0.1 \
+        buildbot-console-view==4.0.1 \
+        buildbot-grid-view==4.0.1 \
         --break-system-packages
 
 WORKDIR /var/lib/buildbot
