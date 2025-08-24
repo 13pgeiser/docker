@@ -44,6 +44,10 @@ c['www'] = {
 codebases = {}
 weekly_projects = []
 
+for repo in repositories:
+    repo = repo.strip()
+    print('%s' % repo)
+
 def fetch_buildbot_config(repo_url):
     cwd = os.getcwd()
     config = ''
@@ -97,6 +101,8 @@ for repo in repositories:
     }
     c['builders'].append(b)
     weekly_projects.append(name)
+
+print("Git steps finished")
 
 for repo in repositories:
     repo = repo.strip()
