@@ -39,7 +39,8 @@ RUN set -ex \
         --break-system-packages
 
 WORKDIR /var/lib/buildbot
-ADD services.conf services.conf
+ADD buildbot.py buildbot.tac
+ADD master.py master.cfg
 ADD buildbot_master.sh buildbot_master.sh
 ADD buildbot-site /etc/nginx/sites-available/default
 # HEALTHCHECK CMD curl --fail http://localhost:8010/api/v2 || exit 1
@@ -47,4 +48,4 @@ ENV BUILDBOT_MASTER_URL="http://127.0.0.1:8010/"
 ENV BUILDBOT_WORKER_NAME=buildbot_worker
 ENV BUILDBOT_WORKER_PASS=pass
 ENV LC_ALL=C
-CMD ["supervisord","-c","/var/lib/buildbot/services.conf"]
+CMD bash buildbot_master.sh
