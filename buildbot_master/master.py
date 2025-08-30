@@ -66,9 +66,9 @@ for repo in repositories:
     if config is None:
         print('Failed: %s' % name)
         continue
-    f.addStep(steps.ShellCommand(command=util.Interpolate('sudo rm -rf  %(prop:builddir)s')))
-    f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber',submodules=True))
-    f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes'))
+    f.addStep(steps.ShellCommand(command=util.Interpolate('sudo rm -rf  %(prop:builddir)s'), name='clean builddir'))
+    f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber',submodules=True, name='git checkout'))
+    f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes', name='docker system prune'))
     for step in config.split('\n'):
         step = step.strip()
         if not step:
@@ -76,7 +76,7 @@ for repo in repositories:
         elif step.startswith('#'):
             continue
         elif step.startswith('bash '):
-            f.addStep(steps.ShellCommand(command=['bash', '-c', step[5:]], timeout=3600))
+            f.addStep(steps.ShellCommand(command=['bash', '-c', step[5:]], timeout=3600, name=step[5:].strip()))
         elif step.startswith('directory_upload '):
             folder = os.path.splitext(name)[0]
             f.addStep(steps.DirectoryUpload(workersrc=step[17:], masterdest="/var/lib/buildbot/master/public_html/releases/" + folder, url=url[:url.rfind(':')] + '/releases/' + folder))
@@ -130,15 +130,15 @@ c['www']['plugins']['badges'] = {
     "template_name": "{style}.svg.j2",  # name of the template
     "font_face": "DejaVu Sans",
     "font_size": 11,
-    "color_scheme": {  # color to be used for right part of the image
-        "exception": "#007ec6",  # blue
-        "failure": "#e05d44",    # red
-        "retry": "#007ec6",      # blue
-        "running": "#007ec6",    # blue
-        "skipped": "a4a61d",     # yellowgreen
-        "success": "#4c1",       # brightgreen
-        "unknown": "#9f9f9f",    # lightgrey
-        "warnings": "#dfb317"    # yellow
+    "color_scheme": {
+        "exception": "#007ec6",
+        "failure": "#e05d44",
+        "retry": "#007ec6",
+        "running": "#007ec6",
+        "skipped": "#a4a61d",
+        "success": "#4cff00",
+        "unknown": "#9f9f9f",
+        "warnings": "#dfb317"
     }
 }
 c['www']['plugins']['waterfall_view'] = True
