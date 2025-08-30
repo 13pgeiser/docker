@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import sys
 
 from buildbot.plugins import changes, schedulers, steps, util, worker
@@ -25,10 +26,20 @@ c['schedulers'] = []
 workers = os.environ['BUILDBOT_WORKERS'].split(';')
 c['workers'] = [worker.Worker(worker_name, os.environ['BUILDBOT_WORKERS_PASS'], max_builds=1) for worker_name in workers]
 c['protocols'] = {"pb": { "port": 9989 }}
-c['www'] = {
-    'port': 8010,
-    'plugins': {},
+# c['www'] = {
+#     'port': 8010,
+#     'plugins': {},
+# }
+c['www'] = dict(port=8010,
+                plugins=dict(waterfall_view={}, console_view={}, grid_view={}))
+c['db'] = {
+    # This specifies what database buildbot uses to store its state.
+    # It's easy to start with sqlite, but it's recommended to switch to a dedicated
+    # database, such as PostgreSQL or MySQL, for use in production environments.
+    # https://docs.buildbot.net/current/manual/configuration/global.html#database-specification
+    'db_url' : "sqlite:///state.sqlite",
 }
+
 codebases = {}
 weekly_projects = []
 
@@ -36,27 +47,13 @@ for repo in repositories:
     repo = repo.strip()
     print('%s' % repo)
 
-def fetch_buildbot_config(repo_url):
+def fetch_buildbot_config(repo_url, name):
     cwd = os.getcwd()
-    config = ''
-    try:
-        folder = 'test'
-        shutil.rmtree(folder, ignore_errors=True)
-        os.makedirs(folder)
-        os.chdir(folder)
-        os.system('git init')
-        os.system('git remote add origin ' + repo_url)
-        os.system('git config core.sparseCheckout true')
-        with open('.git/info/sparse-checkout', 'w') as f:
-            f.write('.buildbot\n')
-        os.system('git pull --depth=1 origin master')
-        with open('.buildbot', 'r') as f:
+    config = None
+    dot_buildbot = os.path.join(cwd, name, '.buildbot')
+    if os.path.exists(dot_buildbot):
+        with open(dot_buildbot, 'r') as f:
             config = f.read()
-        shutil.rmtree(folder, ignore_errors=True)
-    except Exception as e:
-        raise Exception('%s -> %s' % (repo_url, str(e)))
-    finally:
-        os.chdir(cwd)
     return config
 
 for repo in repositories:
@@ -65,7 +62,10 @@ for repo in repositories:
     print('%s -> %s' % (repo, name))
     f = util.BuildFactory()
     f.useProgress = True
-    config = fetch_buildbot_config(repo)
+    config = fetch_buildbot_config(repo, name)
+    if config is None:
+        print('Failed: %s' % name)
+        continue
     f.addStep(steps.ShellCommand(command=util.Interpolate('sudo rm -rf  %(prop:builddir)s')))
     f.addStep(steps.Git(repourl=repo, shallow=True, mode='full', method='clobber',submodules=True))
     f.addStep(steps.ShellCommand(command='docker system prune -a -f --volumes'))

@@ -19,6 +19,7 @@ RUN set -ex \
       supervisor \
       nano \
       vim \
+      figlet \
     && apt-get clean \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
