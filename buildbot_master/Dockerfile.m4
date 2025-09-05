@@ -24,21 +24,24 @@ RUN set -ex \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 # Install Twisted
+#RUN set -ex \
+#    && python3 -m pip install twisted==25.5.0  service-identity==24.2.0  --break-system-packages
+
 RUN set -ex \
-    && python3 -m pip install twisted==25.5.0  service-identity==24.2.0  --break-system-packages
+    && python3 -m pip install twisted==24.3.0  service-identity==24.1.0  --break-system-packages
 
 # Install Buildbot master
 RUN set -ex \
     && python3 -m pip install \
         lz4==4.4.4 \
         certifi == 2025.8.3 \
-        buildbot==4.3.0 \
-        buildbot-www==4.3.0 \
-        buildbot-badges==4.3.0 \
-        buildbot-waterfall-view==4.3.0 \
-        buildbot-console-view==4.3.0 \
-        buildbot-grid-view==4.3.0 \
-        buildbot-wsgi-dashboards==4.3.0 \
+        buildbot==4.0.1 \
+        buildbot-www==4.0.1 \
+        buildbot-badges==4.0.1 \
+        buildbot-waterfall-view==4.0.1 \
+        buildbot-console-view==4.0.1 \
+        buildbot-grid-view==4.0.1 \
+        buildbot-wsgi-dashboards==4.0.1 \
         --break-system-packages
 
 WORKDIR /var/lib/buildbot
