@@ -31,12 +31,14 @@ RUN set -ex \
 RUN set -ex \
     && python3 -m pip install \
         lz4==4.4.4 \
+        certifi == 2025.8.3 \
         buildbot==4.3.0 \
         buildbot-www==4.3.0 \
         buildbot-badges==4.3.0 \
         buildbot-waterfall-view==4.3.0 \
         buildbot-console-view==4.3.0 \
         buildbot-grid-view==4.3.0 \
+        buildbot-wsgi-dashboards==4.3.0 \
         --break-system-packages
 
 WORKDIR /var/lib/buildbot
