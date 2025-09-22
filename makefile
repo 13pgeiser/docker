@@ -3,6 +3,9 @@ DOCKERFILES=\
 	apt_cacher_ng/Dockerfile \
 	buildbot_master/Dockerfile \
 	squid/Dockerfile \
+	prometheus/Dockerfile \
+	prometheus_node_exporter/Dockerfile \
+	grafana/Dockerfile \
 
 # Path to the common M4 files.
 M4_COMMON = `pwd`/_m4
