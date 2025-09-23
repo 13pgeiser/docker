@@ -5,16 +5,19 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
 
-    scrape_interval: 15s
-
     static_configs:
       - targets: ['prometheus:9090']
 
-  - job_name: 'node'
-
-    scrape_interval: 15s
+  - job_name: 'router'
 
     static_configs:
       - targets: ['debiand843e635fb7.home:9100']
+        labels:
+          group: 'production'
+
+  - job_name: 'nodes'
+
+    static_configs:
+      - targets: ['debian00d861dabdae.home:9100']
         labels:
           group: 'production'
