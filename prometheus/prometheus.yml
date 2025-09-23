@@ -18,6 +18,6 @@ scrape_configs:
   - job_name: 'nodes'
 
     static_configs:
-      - targets: ['debian00d861dabdae.home:9100']
+      - targets: ['debian00d861dabdae.home:9100', 'debian00d861c3b883.home:9100']
         labels:
           group: 'production'
