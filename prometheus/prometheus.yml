@@ -21,3 +21,8 @@ scrape_configs:
       - targets: ['debian00d861dabdae.home:9100', 'debian00d861c3b883.home:9100']
         labels:
           group: 'production'
+
+  - job_name: 'power'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['debiand843e635fb7.home:10000']
