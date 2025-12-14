@@ -12,11 +12,17 @@ RUN set -ex \
   && apt-get clean \
   && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
+# RUN set -ex \
+#   && wget https://dl.grafana.com/grafana/release/12.3.0/grafana_12.3.0_19497075765_linux_amd64.tar.gz \
+#   && tar -zxvf grafana_*.tar.gz \
+#   && rm grafana_*.tar.gz \
+#   && mv /grafana-* /grafana
+
 RUN set -ex \
   && wget https://dl.grafana.com/grafana/release/12.1.1/grafana_12.1.1_16903967602_linux_amd64.tar.gz \
-  && tar -zxvf grafana_12.1.1_16903967602_linux_amd64.tar.gz \
-  && rm grafana_12.1.1_16903967602_linux_amd64.tar.gz \
-  && mv /grafana-12.1.1 /grafana
+  && tar -zxvf grafana_*.tar.gz \
+  && rm grafana_*.tar.gz \
+  && mv /grafana-* /grafana
 
 ARG USER=grafana
 ARG UID=1000
@@ -28,4 +34,5 @@ RUN set -ex \
 WORKDIR /grafana
 EXPOSE 3000
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+COPY custom.ini /grafana/conf
 CMD ["bash", "-c", "mkdir -p /grafana/data && chown -R grafana:users /grafana/data && su grafana -s /grafana/bin/grafana server"]
